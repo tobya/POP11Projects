@@ -1,0 +1,948 @@
+/******************************** Program Code *****************************/
+/* Declare and Set up initial global variables.  This sets the particular set
+of options used in the run of the program */
+
+vars GroupSize, MigrationProb,
+    MutationRate, RecolProb, FixedGroupReplacement
+    PropGroupReplacement, GroupReplaceFixedNum, IslandMigration, IslandRecol
+    DiscreteGens, RandomMating,r, a, b, c, x, y, UseGroupSelection, BinaryFitness
+    AccuracyOn, foregroups, lastgroups;
+
+/* Procedures */
+vars CreatePopulation, DoIndividualSelection, GroupSelection,
+    DoMigration_Recol, DoCrossover, DoMutations, CreateGType, IndividualSelection,
+    GetPtypeFitness, DrawGuns, PtypeShots, PtypeAccuracy, GetMaxValue,
+    ChooseFromGroup, GetGroupFitness, Migrate_Recol, noempty, Crossover,
+    GetScores, CheckMutations, Mutate;
+
+/* Values given to probability rates for run */
+0.2-> MigrationProb;
+0.001 -> MutationRate;
+0.2 -> RecolProb;
+
+/* PropotionalGroupReplacement is false then a value is given for how many
+Groups are to be replaced in each round of group selection */
+false -> PropGroupReplacement;
+8 -> FixedGroupReplacement;
+true -> GroupReplaceFixedNum;
+
+/* Boolean indicators for type of Migration, Recolonization,
+DiscreteGeneration, RandomMating and whether the fitness value is binary or
+not and whether the Accuracy value is being used */
+true -> IslandMigration;
+false -> IslandRecol;
+false -> DiscreteGens;
+true -> RandomMating;
+true -> UseGroupSelection;
+false -> BinaryFitness;
+false -> AccuracyOn;
+
+/* Evolve is the main procedure for the program.  It is called first.  It
+first creates a new population of the size indicated.  It then repeats the
+evolution process for the specified number of generations.  It calls
+individual selection, Group selection, migration and recolonization.  If at
+the end of these calls there are any groups with less than 2 inhabitants it
+tries again until all groups have 2 or more inhabitants (necessary for sexual
+reproduction).  At this stage crossover and mutation take place. */
+
+define Evolve(Groups, Individuals, Loci, Generations) -> Final;
+    lvars Pop, NewPop, IndNewPop, group, done, StartPop, CreatedPop, Gen,
+    Results, NewPop, FinalVals, GenVal;
+    Individuals -> GroupSize;
+    CreatePopulation(Groups, Individuals, Loci) ->CreatedPop;
+    CreatedPop -> Pop;
+    0 -> Gen;
+    [] -> FinalVals;
+    repeat Generations times
+        Gen +1 -> Gen;
+        '/' ==>
+        Gen ==>
+        false -> done;
+        until done  do
+            true -> done;
+            Pop -> StartPop;
+            DoIndividualSelection(Pop) -> Results;
+            hd(Results) -> GenVal;
+            Results(2) -> NewPop;
+    /* If the generation is the last generation then only
+            DoIndividualselection is called to get fitness values */
+            if Gen < Generations then
+                GroupSelection(NewPop) -> Pop;
+                DoMigration_Recol(Pop,MigrationProb, [Migrate], IslandMigration)
+                    -> NewPop;
+                DoMigration_Recol(NewPop,RecolProb,
+                    [Recolonize], IslandRecol) -> Pop;
+    /*Since 2 or more parents are needed for sexual reproduction if this is
+not the case in any group then above process is tried again until all groups
+                have at least 2 parents present.*/
+                for group in Pop do
+                    if length(group) < 2 then
+                        false -> done;
+                        StartPop -> Pop;
+                    endif;
+                endfor;
+            endif;
+        enduntil;
+        [^^FinalVals ^GenVal] -> FinalVals;
+    /* Again crossover and mutation are only carried out on generations prior
+        to last */
+        if Gen < Generations then
+            DoCrossover(Pop) -> NewPop;
+            DoMutations(NewPop) -> Pop;
+        endif;
+    endrepeat;
+    [] ==>
+    Pop -> Final;
+    Gen ==>
+    FinalVals ==>
+enddefine;
+
+/* ******************************* Population Creation Procedure **********/
+
+/* CreatePopulation is the top level population creation procedure.  It takes
+the number of groups, number of individual in a group, and genotype size of
+each individual as parameters and creates a population.  It simply creates a
+number of lists of specified size and places them in groups of specified
+sizes. */
+
+define CreatePopulation(NumGroups, NumIndividuals, SizeofInd) -> NewPop;
+    lvars pop, group, Ind;
+    [] -> pop;
+    [] -> group;
+
+    repeat NumGroups times
+        [] -> group;
+        repeat NumIndividuals times
+
+            CreateGType(SizeofInd) -> Ind;
+            [^^group ^Ind] -> group;
+        endrepeat;
+        [^^pop ^group] -> pop;
+    endrepeat;
+    pop -> NewPop;
+enddefine;
+
+
+/* CreateGType gets a specified number of randomly generated 1's and 0's and
+places them in a list which is returned to the calling procedure.  A list [0
+0] is placed at the head of the created list ready to receive the fitness and
+accuracy values */
+
+define CreateGType(Size) -> NewInd;
+    lvars group, Individual, item, R;
+    [[0 0]] -> Individual;
+    repeat Size times
+        random0(199)  -> R;
+        if R > 99 then
+            1 -> R;
+        else
+            0 -> R;
+        endif;
+        [^^Individual ^R]  -> Individual;
+    endrepeat;
+    Individual -> NewInd;
+
+enddefine;
+
+
+
+
+
+
+
+/*************** Individual Selection Procedures***************/
+
+/* Top level procedure for individual selection.  DoIndividualSelection cycles
+through the population sending each group in turn to the individual selection
+procedure to be evaluated.  The lengths of the returned groups are assembled
+into a list which is printed out to aid understanding of program */
+
+define DoIndividualSelection(Population) -> Result;
+    lvars NewG, group, LengthList, l, NewPopulation, total, Highfit,
+    SharpShooters;
+    [] -> NewPopulation;
+    [] -> SharpShooters;
+    [] -> LengthList;
+    0 -> total;
+    for group in Population do
+        IndividualSelection(group) -> NewG;
+        length(NewG) -> l;
+        GroupSize -l -10 -> Highfit;
+        l + total -> total;
+        [^^LengthList ^l] -> LengthList;
+        [^^SharpShooters ^Highfit] -> SharpShooters;
+        [^^NewPopulation ^NewG] -> NewPopulation;
+    endfor;
+    SharpShooters ==>
+    LengthList ==>
+    total==>
+    [^total ^NewPopulation] -> Result;
+
+enddefine;
+
+
+/* Individual Selection cycles through the group it is sent getting the
+phenotype fitness for each individual in the group.  It then puts the highest
+fitness individual at the head of a new list which is sent to DrawGuns to weed
+out the dead. */
+
+define IndividualSelection(Group) -> Result;
+    lvars Ptype, FitValue, High, SortGroup;
+    0 -> High;
+    [] -> SortGroup;
+    for Ptype in Group do
+        GetPtypeFitness(Ptype) -> FitValue;
+        ;;;    FitValue ==>
+        FitValue -> hd(Ptype);
+        FitValue(1) -> FitValue;
+        if FitValue > High then ;;; ensure highest is at head
+            [^Ptype ^^SortGroup] -> SortGroup;
+            FitValue -> High;
+        else
+            [^^SortGroup ^Ptype] -> SortGroup;
+        endif;
+    endfor;
+
+    DrawGuns(SortGroup) -> Result;
+
+enddefine;
+
+
+/* The procedure that does most of the work for individual selection.
+GetPtypeFitness gets the actual fitness of each phenotype.  If binary coding
+is being used (indicated by the BinaryFitness Global variable) then fitness is
+calculated accordingly, or else a simple coding of a 1 is added to the fitness
+for each 1 present in the phenotype.  The Accuracy of the shot is also found
+by taking the number of Loci at the end that represent the accuracy indicated
+by the PtypeAccuracy Global variable. */
+
+define GetPtypeFitness(Phenotype) -> Result;
+    ;;; Basic phenotype fitness.  gets boolean value of genotype.
+    lvars Locus, Value, Powerof, Count, p, Shots, Accuracy;
+
+    /* Check if encoding is Binary or Straight */
+
+    if BinaryFitness then
+        1 -> Count;
+        0 -> Value;
+
+        repeat PtypeShots -1  times
+            2 * Count -> Count;
+        endrepeat;
+
+        for Locus from 2 to (PtypeShots +1) do
+            ;;; See if this works, if not make it check its not a list.
+            if Phenotype(Locus) = 1 then
+                Count + Value -> Value;
+            endif;
+            Count / 2 -> Count;
+        endfor;
+
+        /* 10 is added to the value so as their is a basic fitness of 10 for all phenotypes */
+        Value + 10 -> Shots;
+
+        0 -> Value;
+        1 -> Count;
+
+        repeat PtypeAccuracy -1 times
+            2 * Count -> Count;
+        endrepeat;
+
+        for Locus from (PtypeShots +2) to length(Phenotype) do
+            if Phenotype(Locus) = 1 then
+                Count + Value -> Value;
+            endif;
+            Count / 2 -> Count;
+        endfor;
+     /* This gives the accuracy as a value between 0 and 1 */
+     (Value*1.0) / (GetMaxValue(PtypeAccuracy)*1.0) -> Accuracy;
+
+        [^Shots ^Accuracy] -> Result;
+
+    else
+     /* If mapping is not binary but straight then use this decoding */
+
+        0 -> Value;
+        for p in Phenotype do
+            if p = 1 then
+                Value +1 -> Value;
+            endif;
+        endfor;
+    endif;
+    Value + 10 -> Result;
+    [^Result 0] -> Result;
+/* Since accuracy isnt being used a 0 is added to create the correct return list */
+enddefine;
+
+/* The DrawGuns procedure takes a list with the highest member at the head and
+with proportional randomness weeds out other members of the group up to the
+maximum allowed by the fitness of the sharpshooter'. */
+
+define DrawGuns(SortedGroup) -> LiveGroup;
+    lvars SharpShooter, Ptype, LGroup;
+
+    hd(SortedGroup) -> SharpShooter;  ;;; Highest phenotype
+    [^SharpShooter] -> LiveGroup; ;;; Obviously the sharpshooter survives
+    ChooseFromGroup(tl(SortedGroup), hd(hd(SharpShooter)),
+     hd(SharpShooter)(2), true) -> LGroup;
+    [ ^^LiveGroup ^^LGroup] -> LiveGroup;
+enddefine;
+
+
+
+/* ChooseFromGroup is used to take kill off members of a groups in line with
+individual selection.  It is sent arguments including the group, the number to be killed
+and the accuracy of the shots.  Then it cycles through the group a number of times
+equal to those to be killed. */
+define ChooseFromGroup(Group,Number,Accuracy,ReturnVar) -> NewGroup;
+    ;;; if return is false then those not selected are returned however
+    ;;; it needs to be implemented;
+    lvars Total, CurrTotal, R, selection, i, Sel, NewGroup, done, Ptype
+        , ind, Max, fit, Fitlist, tempgroup, kill;
+    0 -> Total;
+    1 -> i;
+
+    Group -> NewGroup;
+    false -> done;
+    Number +1 -> Max;
+    if Number = -1 then
+        if random(1.0) < MigrationProb then
+            random(length(Group)) -> R;
+
+        endif;
+        else
+        repeat Number times
+            0 -> CurrTotal;
+            false -> done;
+            1 -> i;
+            [] -> Fitlist;
+            0 -> Total;
+     /* Each cycle a new total is found for those individuals still alive in the group */
+            for Ptype in NewGroup do
+                hd(hd(Ptype)) -> fit;
+                (Max - fit) + Total -> Total;
+                [^^Fitlist ^fit] -> Fitlist;
+            endfor;
+
+            random(Total) -> selection;
+
+            until done  do
+                1 -> i;
+                false -> kill;
+
+         /* This until loop ensures that if the loop cycles and doesnt find a target (this
+          can happen ligitamately) then it ends, and I is set back to 0 */
+
+                until (done) or (i > length(NewGroup)) do
+                    NewGroup(i) -> Sel;
+                    CurrTotal + Fitlist(i) -> CurrTotal;
+                    if selection <= CurrTotal then
+
+          /* If accuracy is being used, a random number is generated at this point,
+          if it is less than the accuracy of the shooter, the individual is removed
+          otherwise not */
+
+                        if (AccuracyOn) then
+                            random0(1.0) -> r;
+                            if (r  < Accuracy) then
+                                true -> kill;
+                            endif;
+                        else
+                            true -> kill;
+                        endif;
+
+                        if kill then
+                            if NewGroup matches [??x ^Sel ??y] then
+                                [^^x ^^y] -> NewGroup;
+                            endif;
+                        endif;
+
+                        true -> done;
+                    endif;
+                    i + 1 -> i;
+                enduntil;
+            enduntil;
+        endrepeat;
+    endif;
+enddefine;
+
+
+
+/* The maximum value allowed by a binary string is found by this procedure.  It simply
+takes the size of the binary string (not the string itself) and find the max value for a
+sting of that length.  This is necessary for getting the accuracy between 0 and 1. */
+
+define GetMaxValue(Size) -> Max;
+    lvars Value, Powerof, Count;
+    1 -> Count;
+    0 -> Value;
+    repeat Size -1  times
+        2 * Count -> Count;
+    endrepeat;
+    repeat Size  times
+        Count + Value -> Value;
+        Count / 2 -> Count;
+    endrepeat;
+    Value  -> Max;
+enddefine;
+
+/************************** Group Selection Procedures *****************/
+
+/* The group selection procedure removes those groups which are less fit from the
+population.  There are currently two methods, proportional, where each group has a
+chance of being replaced dependant upon its fitness, and lowest where the specified
+number of groups are simply removed from the bottom of the list. */
+
+define GroupSelection(Population) -> ReturnPopulation;
+    lvars group, Total, Scores, Count, R, G, NewPop, CurrTotal, i;
+    lvars done, Ptype, tempNewPop, Low, High, Numgroups, list;
+    false -> done;
+    [] -> Scores;
+    1 -> Count;
+    0 -> CurrTotal;
+    0 -> Total;
+    0 -> High;
+    Population -> NewPop;
+    [] -> list;
+
+    length(Population) -> Numgroups;
+
+    if GroupReplaceFixedNum then
+        repeat FixedGroupReplacement times
+            GetScores(NewPop) -> Scores;
+            hd(Scores) -> Total;
+            Scores(2) -> Scores;
+            if PropGroupReplacement then
+                0 -> CurrTotal;
+                1 -> Count;
+                random(Total) -> R;
+                1 -> i;
+                false -> done;
+                until done do
+                    CurrTotal + hd(Scores(i)) -> CurrTotal;
+                    if CurrTotal >= R then
+
+                        if NewPop(hd(tl(Scores(i)))) = [[empty]] then
+
+                        else
+                            NewPop(hd(tl(Scores(i)))) -> list;
+                            if NewPop matches [??x ^list ??y] then
+                                [^^x [[empty]]  ^^y] -> NewPop;
+                                true -> done;
+                            endif;
+                        endif;
+
+                    endif;
+                    i+ 1 -> i;
+   /*Change this to empty boolean for empty list*/
+                    if i = Numgroups and (done = false) then
+                        1 ->Count;
+                        0 -> CurrTotal;
+                        1 -> i;
+                        random(Total) -> R;
+                    endif;
+                enduntil;
+       else
+
+                [] -> tempNewPop;
+                100 -> Low;
+                for group in NewPop do
+                    if not( group matches [[empty]]) and
+                        GetGroupFitness(group) < Low then
+                        GetGroupFitness(group) -> Low;
+                        [^group ^^tempNewPop] -> tempNewPop;
+                        else
+                        [^^tempNewPop ^group] -> tempNewPop;
+                    endif;
+
+                endfor;
+                tl(tempNewPop) -> NewPop;
+                [[[empty]] ^^NewPop] -> NewPop;
+            endif;
+
+        endrepeat;
+    endif;
+
+    NewPop -> ReturnPopulation;
+/* This can be taken out once output is obtained */
+    lvars templengths, templength;
+    [] -> templengths;
+    for G in ReturnPopulation do
+        length(G) -> templength;
+        [^^templengths ^templength] -> templengths;
+    endfor;
+enddefine;
+
+
+/* The get scores procedure takes the population, and creates a list with the size of
+each group in the population, along with a number giving the total of all the scores
+added together */
+
+define GetScores(Population) -> Result;
+    lvars group, Scores, Count, GFitValue, Total;
+    [] -> Scores;
+    0 -> Total;
+    1 -> Count;
+    for group in Population do
+        ;;; number of phenotypes present.  Take away from total size,
+        ;;; to give inverse probability
+        (GroupSize - GetGroupFitness(group))* 10 -> GFitValue;
+
+        Total + GFitValue -> Total;
+
+        [^^Scores [^GFitValue ^Count]] -> Scores;
+        Count + 1 -> Count;
+    endfor;
+    [^Total ^Scores] -> Result;
+enddefine;
+
+/* Although this is a very simple procedure, it is a separate procedure to allow a new
+group fitness operator to be inserted if necessary */
+
+define GetGroupFitness(group) -> Result;
+    ;;; Currently only calculates basic fitness
+    length(group) -> Result;
+enddefine;
+
+
+
+/******************************* Migration / Recolonization Procedures ************/
+
+/* The DoMigration_Recol procedure takes the Population, the Migration or
+Recolonization Probability, a list indicating if migration or recolonization is being
+called, and a boolean indicating whether it is Island Migration or recolonization.  The
+procedure cycles through the population, and for each individual in a group a random
+number is found.  IF the random number is less than the specified probability it is
+placed in the migrant pool and removed from its original group.  Migrate_Recol is then
+called which places these migrants or colonists in their new groups. */
+
+
+define DoMigration_Recol(Population,Prob, type, Island) -> ResultantPop;
+    lvars group, individual, R, NewPop, MigrantPool, migrants, initlength
+        PoolMembers, totalmigrants;
+    Population -> NewPop;
+    [] -> MigrantPool;
+    [] -> PoolMembers;
+    0 -> totalmigrants;
+
+    for group in NewPop do
+        length(group) -> initlength; ;;; This helps avoid < 2 individual in a group.
+        0 -> migrants;
+        [] -> PoolMembers;
+
+        if group matches [[empty] ??x] then ;;; if group is already empty ignore.
+            else
+            for individual in group do
+                if type = [Recolonize]
+                and individual matches [??x [Migrate]] then
+          /* Individuals that have already migrated cannot be chosen for
+          recolonization.  */
+               else
+
+                    if random(1.0) < Prob then
+                        if NewPop matches [??foregroups [??x ^individual ??y]
+                                ??lastgroups]
+                        and initlength - migrants > 2 then
+          /* ensure taking colonist wont reduce group to less than 2 (needed for
+          sexual reproduction. */
+                            [^^foregroups [^^x ^^y] ^^lastgroups] -> NewPop;
+
+                /* If colonization is Island then place individually in list, otherwise all
+          individuals from a specific group are placed in same list. The type of
+          individual (colonist or migrant) is put in the list in order to differentiate
+          them, this is removed later*/
+
+           if Island = true then
+                                [[^^individual ^type] ^^MigrantPool] ->
+                                MigrantPool;
+                                migrants + 1 -> migrants;
+                           else
+                                [[^^individual ^type] ^^PoolMembers] ->
+                                PoolMembers;
+                                migrants +1 -> migrants;
+                            endif;
+
+                        endif;
+                    endif;
+                endif;
+            endfor;
+            migrants + totalmigrants -> totalmigrants;
+     /* if not island then add pool members to the migrant pool as a list */
+            if Island = false then
+                [^PoolMembers ^^MigrantPool] -> MigrantPool;
+            endif;
+        endif;
+    endfor;
+
+/* Should take out part about migrant pool being empty */
+    if MigrantPool = [] then
+        [empty] ==>
+    else
+        Migrate_Recol(NewPop, MigrantPool, type, Island) -> ResultantPop;
+    endif;
+enddefine;
+
+
+/* This procedure takes the population (minus those chosen to recolonize or migrate),
+the migrants (or colonists) the type as above and the island boolean.  The procedure
+cycles through the migrant pool finding a suitable home for them (for migrants this is
+any group, for colonists this is a previously extinguished group). */
+
+define Migrate_Recol(P , Migrants, Recol_Migrate, Island) -> Result;
+    lvars group, mig, newhome, done, Count, g, i, Counti, temp;
+
+    P -> Result; ;;; Assign the population to the result.
+    false -> done;
+
+/* This should be taken out.
+ if Recol_Migrate = [Recolonize] then
+    endif; */
+
+/* Do island migration, recolonization */
+    if Island = true then
+
+        for mig in Migrants do
+            false -> done;
+     /* Migrants can be placed in any group */
+            if Recol_Migrate = [Migrate] then
+                random(length(Result)) -> newhome;
+     /* Check here to ensure migrants dont go over those allowed in group */
+
+     /* A previously extinguished group must be found for a colonist.  In addition, all
+     empty groups must be recolonized before any doubling up of colonist groups
+     can happen. */
+
+      elseif Recol_Migrate = [Recolonize] then
+
+          until done do
+                    random(length(Result)) -> newhome;
+                /* It must also be insured that by adding a colonist it does not bring the
+          group over its total number allowed */
+
+     if (Result(newhome) matches [[empty] ??x])
+                    and (length(mig) + length(Result(newhome)) <=
+                            GroupSize) then
+                        true -> done;
+
+          /* Again this line should be taken out.
+     if length(Result(newhome)) > GroupSize then
+                        endif;*/
+
+                    endif;
+                enduntil;
+
+            endif;
+     /* Assign the group indexed to group variable */
+            Result(newhome) -> group;
+     /* Place migrant or colonist in the group specified */
+            if Result matches [??foregroups ^group ??lastgroups] then
+                [^^foregroups [^^group ^mig] ^^lastgroups] -> Result;
+
+/*   Again this bit could be taken out.
+                if length(Result(newhome)) > GroupSize then
+                endif; */
+
+            endif;
+        endfor;
+
+/* if Island is false then do the following */
+ else
+
+        for mig in Migrants do
+            false -> done;
+            if Recol_Migrate = [Migrate] then
+     /* Choose new home for migrant and ensure the length of the group of
+     migrants does not go over that allowed */
+                until done do
+                    random(length(Result)) -> newhome;
+                    if length(Result(newhome)) + length(mig) <= GroupSize then
+                        true -> done;
+                    endif;
+                enduntil;
+
+            elseif Recol_Migrate = [Recolonize] then
+                until done do
+                    random(length(Result)) -> newhome;
+          /* Check that new home for colonist was previously extinguished and
+          that adding the colonist pool wont bring its total over that allowed */
+
+              if (Result(newhome) matches [[empty] ??x]) and
+                        (length(mig) + length(Result(newhome)) <=
+                            GroupSize) then
+          /* Check that if there are any other colonists already in this group that
+          there are no other empty groups available to fill */
+                        if x matches [ ??y [??a [Recolonize]] ??b] then
+                            if  noempty(Result) = true then
+                                true -> done;
+                            endif;
+                        else
+                            true -> done;
+                        endif;
+                    endif;
+                enduntil;
+            endif;
+     /* Add the colonists or migrants to the group specified */
+            Result(newhome) -> group;
+            if Result matches [??foregroups ^group ??lastgroups] then
+                [^^foregroups [^^group ^^mig] ^^lastgroups] -> Result;
+            endif;
+        endfor;
+    endif;
+
+/* This final piece of code simiply removes the type indicators from the individuals in
+the groups in the population*/
+
+    if Recol_Migrate = [Recolonize] then
+        1 -> Count;
+        for g in Result do
+
+            0 -> Counti;
+            for i in g do
+
+                Counti + 1 -> Counti;
+                if i matches [ ??x [Recolonize]] then
+                    [^^x] -> Result(Count)(Counti);
+                endif;
+
+                if i matches [??x [Migrate]] then
+                    [^^x] -> Result(Count)(Counti);
+                endif;
+
+          endfor;
+
+       if g matches [[empty] ??x] then
+                [^^x] -> Result(Count);
+            endif;
+
+            Count +1 -> Count;
+        endfor;
+    endif;
+
+enddefine;
+
+
+/* This procedure takes a population as parameter and cycles through the groups in it.
+If it find an previously extinguished group that has of yet not received any colonists, it
+returns false */
+
+define noempty(Pop) -> Result;
+    lvars group, ind;
+    true -> Result;
+    for group in Pop do
+        if group matches [[empty] ??y] then
+            if y matches [??a [??b [Recolonize]] ??c] then
+     /* leave result true */
+            else
+                false -> Result;
+            endif;
+        endif;
+    endfor;
+
+enddefine;
+
+
+/********************************** Crossover Operators *****************/
+
+/* DoCrossover takes the population as a parameter and returns the new
+population.*/
+
+define DoCrossover(Pop) -> NewPop;
+    lvars group, currsize, NumKids, NumEach, KidsPerCouple, tempgroup,
+        NumSofar, NewKid, tempgroup, currlength, P1, P2, templist, done,
+        Parent1, Parent2;
+
+    [] -> NewPop;
+    for group in Pop do
+        false -> done;
+        0 -> NumSofar;
+        [] -> KidsPerCouple;
+        group -> tempgroup;
+        length(group) -> currsize;
+        if currsize > 1 then
+            if DiscreteGens then
+                GroupSize -> NumKids;
+                else
+                GroupSize - currsize -> NumKids;
+            endif;
+            NumKids div (currsize  div 2) -> NumEach;
+            repeat currsize div 2 times
+                [^^KidsPerCouple ^NumEach] -> KidsPerCouple;
+            endrepeat;
+     /* Add the extra to make up group size to first set of parents */
+            hd(KidsPerCouple) + (NumKids mod (currsize div 2)) ->
+            hd(KidsPerCouple);
+            until done do
+                if RandomMating = true then
+
+                    length(tempgroup) -> currlength;
+                    random(currlength) -> P1;
+                    tempgroup(P1) -> Parent1;
+/* This should be deleted, it might be the cause of final error*/
+;;;                    tempgroup;
+                    if tempgroup matches [??x ^Parent1 ??y] then
+                        [^^x ^^y] -> tempgroup;
+                    endif;
+                    random(currlength -1) -> P2;
+
+                    tempgroup(P2) -> Parent2;
+                   /* Again delete this*/
+   ;;;  tempgroup;
+
+                    if tempgroup matches [??x ^Parent2 ??y] then
+                        [^^x ^^y] -> tempgroup;
+                    endif;
+                    repeat hd(KidsPerCouple) times
+                        Crossover(Parent1, Parent2) -> NewKid;
+                        [^^group ^NewKid ] -> group;
+                        if length(KidsPerCouple) > 1 then
+                            tl(KidsPerCouple) -> KidsPerCouple;
+                            else
+                            false -> done;
+                        endif;
+                    endrepeat;
+/* again this shouldnt happen now so you could delete it */
+                    if length(tempgroup) <= 1 then
+                        true -> done;
+;;;     [length less than 1 for parents ] ==>
+                    endif;
+                    else
+                    [random false] ==>
+/* youve got a lot of these delete if appropriate*/
+      ;;;              done;
+                endif;
+            enduntil;
+        endif;
+/* Add group to New population */
+        [^^NewPop ^group] -> NewPop;
+    endfor;
+enddefine;
+
+
+/* The Crossover procedure takes two parent genotypes and returns a Child generated
+by crossover from the two parents. Which parent contributes which part of their
+genotype is randomly decided. */
+
+define Crossover(GtypeA, GtypeB) -> Kid;
+    lvars count, Gtypelength, Cross, X, Y, Par1, Par2;
+    [[0 0]] -> Kid;
+    2-> count; ;;; Skip fitness list.
+
+    length(GtypeA) -2 -> Gtypelength; ;;; Skip fitness list and locus 1.
+/* Randomly decide which Parent contributes its first portion and which its last portion
+*/
+    if random(1.0) > 0.5 then
+        GtypeA -> Par1;
+        GtypeB -> Par2;
+        else
+        GtypeA -> Par2;
+        GtypeB -> Par1;
+    endif;
+
+    /*Adding 1 to Gtypelength compensates for the above -2 */
+    random(Gtypelength) +1 -> Cross;
+    repeat Gtypelength +1 times
+        if count < Cross  then
+            Par1(count) -> X;
+            [^^Kid ^X] -> Kid;
+            else
+            Par2(count) -> Y;
+            [^^Kid ^Y] -> Kid;
+        endif;
+
+        count + 1 -> count;
+    endrepeat;
+
+enddefine;
+
+
+
+/********************************* Mutation Procedures **********************/
+
+
+/*
+define CheckMutations(Group) -> MutatedGroup;
+    lvars Ind, MInd;
+    [] -> MutatedGroup;
+    for Ind in Group do
+        if random0(1.0) < MutationRate then
+            Mutate(Ind) -> MInd;
+            [^^MutatedGroup ^MInd] -> MutatedGroup;
+            else
+            [^^MutatedGroup ^Ind] -> MutatedGroup;
+        endif;
+    endfor;
+enddefine;
+
+define DoMutations(Population) -> New;
+    lvars group, Newgroup;
+    [] -> New;
+    for group in Population do
+        CheckMutations(group) -> Newgroup;
+        [^^New ^Newgroup] -> New;
+    endfor;
+enddefine;
+
+define Mutate(Individual) -> Result;
+    lvars R, Loci;
+    [] -> Result;
+    for Loci in Individual do
+        [^^Result ^Loci] -> Result;
+    endfor;
+    random(length(Individual) -1 ) +1  -> R;
+
+    if Result(R) = 0 then
+        1 -> Result(R);
+        else
+        0 -> Result(R);
+    endif;
+enddefine;
+*/
+
+
+/* DoMutations is the top level procedure which takes the population, and returns the
+new population with any mutations.  It cycles through the groups in the population,
+calling CheckMutation and assigns the new groups to the population to be returned */
+
+define DoMutations(Population) -> New;
+    lvars group, Newgroup;
+    [] -> New;
+    for group in Population do
+        CheckMutations(group) -> Newgroup;
+        [^^New ^Newgroup] -> New;
+    endfor;
+enddefine;
+
+/* CheckMutations, takes a group and returns the group with any mutations.  It cycles
+through the individuals in the group sending each to the mutate procedure, and builds
+a list of the groups returned. */
+
+define CheckMutations(Group) -> MutatedGroup;
+    lvars Ind, MInd;
+    [] -> MutatedGroup;
+    for Ind in Group do
+            Mutate(Ind) -> MInd;
+            [^^MutatedGroup ^MInd] -> MutatedGroup;
+    endfor;
+enddefine;
+
+/* The Mutate procedure actually decides if a group gains any mutations, and then
+returns the individual.  Each loci in an individual is checked for a mutation, and if it
+receives on the bit at that loci is changed. */
+
+define Mutate(Individual) -> Result;
+    lvars R, Loci, NewLoci;
+    [] -> Result;
+    for Loci in Individual do
+    if random0(1.0) < MutationRate then
+     if Loci = 0 then
+        1 -> NewLoci;
+        else
+        0 -> NewLoci;
+    endif;
+        [^^Result ^NewLoci] -> Result;
+    else
+        [^^Result ^Loci] -> Result;
+endif;
+  endfor;
+
+enddefine;

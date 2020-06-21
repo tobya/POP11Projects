@@ -1,0 +1,754 @@
+
+LOCAL TEACH PSTYLE                          Steve Hardy and Aaron Sloman
+                                                       Revised May 1990
+
+                HOW TO WRITE UP YOUR PROGRAMMING PROJECT
+                ========================================
+
+         CONTENTS - (Use <ENTER> g to access required sections)
+
+ -- Introduction
+ -- Intended Audience
+ -- Overview of what should go into a project write-up
+ -- Physical packaging is important
+ -- Formatting
+ -- Section by section description of the report
+ -- 1. Introduction
+ -- 2. Description of WHAT the program does
+ -- 3. High level explanation of HOW it works
+ -- 4. More detailed explanation of HOW it works
+ -- 5. Conclusions
+ -- 6. Bibliography
+ -- Appendix 1: printout showing what the program does
+ -- Appendix 2: printout showing how it works
+ -- Appendix 3: listing of program
+ -- Appendix 4: instructions to users
+ -- Avoid plagiarism: make clear what isn't your work
+ -- Length of report
+ -- Summary of main DON'Ts
+ -- Other relevant reading
+ -- References for Sussman and Winograd (Good scenarios)
+
+-- Introduction -------------------------------------------------------
+
+These notes are intended to help undergraduates and MSc students writing
+up a major programming project. For short reports on set programming
+tasks see TEACH * REPORTS.
+
+These notes may also be useful for research students writing M.Phil or
+D.Phil theses, but they should also read TEACH *THESES.
+
+Before you start work on your program you should have a good plan for
+it. TEACH * PROPOSALS gives some suggestions about how to start
+designing a project.
+
+TEACH * PROGSTYLE gives information on programming style.
+
+This file assumes you have already read those teach files and have a
+clear idea of what you plan to put into your program.
+
+TEACH * PROJECTS gives some information about previous project titles
+by second year AI students.
+
+The report on your project is as important (if not more important) than
+the program itself.  In the report you should try to explain your
+program, justify it, criticise it, and relate it to other work.
+Remember, above all, you must interest the reader and communicate
+effectively.
+
+
+-- Intended Audience ---------------------------------------------------
+
+When writing a report or paper, always imagine that you are writing for
+a PARTICULAR reader. This imaginary reader ought not to be your tutors
+because you will make too many assumptions about our knowledge of what
+you are doing and why.
+
+A better imagined audience would be next year's students but even then
+you will be tempted to assume a detailed knowledge of the programming
+language used, and this assumption is inappropriate for an assessment
+exercise.
+
+Bear in mind that your report will be read by an external examiner who
+may have no direct experience of the programming language you use and
+only a limited idea of the aims of our course. Even the internal
+examiners may not have read the same teach files as you.
+
+So imagine yourself to be writing for a student like yourself, on a
+course similar to this, but at a different university where they teach
+the same kind of course, but using a different programming language. So
+if you want this imaginary student to understand your write-up you ought
+not to rely on a deep understanding of the language, at least not in the
+main report.
+
+The appendices (described below) should, however, include the full
+program, and may include comments and discussion that assume familiarity
+with the language.
+
+If the domain of your program is one requiring relatively specialised
+knowledge (e.g. music, or company law, or a game, or electronic
+circuits) make sure you include enough information either in the main
+text or in an appendix to ensure that the non-specialist reader
+understands your problem and can tell whether your program works well or
+not.
+
+-- Overview of what should go into a project write-up -----------------
+
+For short reports on programming exercises done during the term,
+read TEACH * REPORTS.
+
+For longer projects your write-up should include the following sections,
+described in more detail in later sections. Note that it is not
+compulsory to use EXACTLY the organisation recommended here. Use your
+judgement (and supervisor's advice) as to how far to conform. The
+criterion should generally be: would this change make it easier for the
+reader to understand what I've done and how I have done it and evaluate
+it?
+
+The recommended (default) organisation for the report is as follows:
+
+(1) An introduction, explaining the purpose of the project. If necessary,
+    refer BRIEFLY to previous work. Make the reader interested in the
+    project. Describe the domain and what the problem is.
+
+(2) A description of WHAT your particular program does - including
+    examples and possibly a 'scenario'. Also give a general
+    characterisation of the scope and limits of the program. Make the
+    reader so impressed that he/she wants to read on to find out HOW
+    it is done.
+
+(3) A high level overview of HOW your program works.
+
+    Don't go into details of how it is implemented in the particular
+    language, but describe what kinds of information it uses, what
+    processes operate on the information, what strategies are used
+    etc.
+
+(4) A more detailed explanation of your program indicating particular
+    difficulties and problems. This section can assume a knowledge of
+    the language if necessary, but try to describe the program
+    independently of the language, if possible. Nitty gritty details
+    can be left to comments in the program itself.
+
+(5) Conclusions - indicating how well you have achieved your aims and
+    in what ways your program can be extended or improved. Don't be
+    afraid to criticise what you have done, and point out how you might
+    do it better if you were starting again.
+
+    Refer to work by other people, if it's relevant.
+
+Appendices should be provided for the reader who wants a more detailed
+explanation of how your program works.
+
+For example:
+
+Appendix 1 (Optional)
+    This could show additional typical interactions with your program
+    (i.e. input/output behaviour). It is not necessary if your main text
+    gives enough examples to show the range of behaviours adequately.
+
+Appendix 2 (Optional)
+    This could include one or more detailed example runs of your program
+    showing the behaviour of some of the lower level facilities. You
+    can use standard trace output, but ONLY if it is obviously going to
+    interest the reader. Generally trace output is UNSUITABLE for
+    use in a project report, and it is better to change your program to
+    do printing in a readable and interesting form instead of just using
+    tracer output. Highlight interesting points with comments, perhaps
+    written in ink on the right.
+
+Appendix 3
+    A listing of your program, including comments. Remember that for
+    each main section of the program you should start with a listing
+    of any important global variables used. (See TEACH *PROGSTYLE)
+
+Other appendices
+    These could include information on how to run the program, a complete
+    formal description of the range of problems it can handle (e.g. a
+    grammar for the language it can parse, or the rules for the game
+    it plays, etc.), an alphabetical list of all the main procedures
+    saying briefly what they do, etc. Use your judgement as to what is
+    worth including.
+
+Bibliography and acknowledgements
+    Where appropriate, list books, articles, papers, and TEACH files
+    that you have found helpful. You can also list people who have
+    given you substantial help. E.g. if someone else wrote one of your
+    main programs for you, say so, in case it is discovered anyway.
+
+Please number the pages of each Appendix (either following on from the
+page numbering in the main text, or numbered separately as page A-1, A-2
+etc). Cite these page numbers when referring to details, otherwise it
+may be hard for readers to find what you are referring to.
+
+
+-- Physical packaging is important ------------------------------------
+
+When you attach printout in appendices, make sure it is in a form which
+is going to be easy to read. If the examiners have to solve a complex
+puzzle of paper-clips, ribbons, or whatever, in order to take pages
+apart to read them, they will not be pleased.
+
+DON'T hand in fan-folded sheets of line-printer output. Separate
+the sheets and clip them together so that they can be read comfortably.
+
+DON'T hand in wide untrimmed sheets. If your printout is on wide,
+line-printer paper, make sure you have packaged it so that it can fit
+into an envelope designed for A4 size paper. I.e. trim pages where the
+text does not take up more than A4 size, and in other cases make each
+page fold in.
+
+DON'T hand in a report bound in such a way that the binder covers
+up part of the text, so that the examiner has to unbind it in order
+to read it. (I.e. make sure the margin is wide enough to prevent this
+problem.)
+
+
+-- Formatting ---------------------------------------------------------
+
+Use VED commands like <ENTER> jcp and <ENTER> tidy to format program
+text so that it is readable.
+
+There are several text formatters available. You can format text inside
+VED using the commands described in HELP * FORMAT and HELP * PAGE,
+though it is often better to use a program that obeys formatting
+commands, like the unix formatters "nroff" and "troff". You can
+get an introduction to a subset of these facilities in HELP * RNO
+and HELP * RNO.EXTRA.
+
+Depending on which machine you use, several "man" files may be available
+giving information on nroff, troff, TeX, LaTeX, or other formatters.
+
+For text formatted in VED it is most unwise to use the standard VED
+width of 78 columns e.g. because this can make it hard to fit the
+text into the space left by binders. (See last section). So you can
+set the width to be about 70 or 72 columns with the <ENTER> rcol
+ved command, or in your vedinit.p file use the following command:
+
+    72 -> vedlinewidth;
+
+(You can have different values for different sorts of files if you
+use the vedfiletypes mechanism. See HELP VEDFILETYPES)
+
+-- Section by section description of the report -----------------------
+
+The suggestions made above are expanded below. In general you could do
+worse than model your presentation on a teach file, or journal article
+that you find successful (though many are poorly structured). However,
+teach files have a different purpose from project reports. Even so they
+may give you an indication of how to write parts of your write-up, in
+particular Sections 2, 3 and 4. Examples of files worth looking at to
+see how to describe a program include:
+
+TEACH * FOCUSSING, TEACH * WALTZ, TEACH * PARSESENT, TEACH * VIEWS
+TEACH * PARPAR, TEACH * INTERP, TEACH * FINGER
+
+It may be necessary to divide up some of the longer sections of your
+report into sub-sections. Do this if it helps the reader to keep track
+of what you are up to.
+
+
+-- 1. Introduction -----------------------------------------------------
+
+The introduction should convey to the reader WHY you have chosen to do
+what you have done and should place your work in a wider context. For
+example, suppose your program found lines and junctions in a TURTLE
+picture (like the SEEPICTURE program). Presumably such a program is part
+of an intended larger system to recognise the bodies drawn (subsequent
+phases of the larger program might find regions and then group regions
+into bodies such as blocks and wedges). Obviously, you should sketch out
+what these other phases would have to do, so that the reader knows why
+you have done what you have.
+
+An important part of the AI course has been an exposure to the
+literature of AI including programs that have been published. Show that
+you are aware of relevant literature. You may want to claim total
+originality but if so, justify that claim. A very brief REVIEW of some
+relevant literature is therefore strongly recommended. But don't go on
+for pages and pages discussing it: this is not an extended essay, and
+other examinations will test your background knowledge.
+
+Occasionally students choose a project topic on which there is no
+directly relevant published work. In that case say so, and do what you
+can to indicate the relevance of your project to general issues in AI.
+
+The introduction should not presuppose familiarity with the programming
+language used: it should describe the project in a language-independent
+manner if possible. Similarly don't assume that the reader necessarily
+knows all about the problem domain - if it requires specialised
+knowledge, present it (or refer to an appendix).
+
+
+-- 2. Description of WHAT the program does ----------------------------
+
+Don't put in details of HOW the program works in this section, but show
+WHAT it does in a manner that makes the reader want to know how ...
+explained in later sections of the report.
+
+This section can include two kinds of information
+
+(a) examples (including scenario) to illustrate what the program does
+    and motivate the reader
+(b) a general description of the SCOPE of the program indicating the
+    range of problems it can handle, the range of objects it represents,
+    the range of relationships it knows about etc.
+
+The overall aim of the section is to describe what your program does or,
+if it is incomplete, what it was intended to do. For example you may say
+"given the following Turtle picture ..., my program produces this
+description ... of the lines in the Turtle picture".
+
+Don't just describe it in the abstract: give some examples of the
+program at work. Don't leave it to the reader to look in the appendices
+for examples: the main text should be readable and informative on its
+own.
+
+An extended example of the program's behaviour is often called a
+'scenario'. A scenario is usually far more effective at communicating
+and interesting the reader than an abstract description. One of the best
+known examples of a scenario is that used by T.Winograd in describing his
+program SHRDLU, quoted at length in several books on AI. Another is
+the description by G.Sussman of his HACKER program. (See references
+below.)
+
+If you simply present examples or a scenario the reader will not know
+what else the program can or cannot do. So in addition to examples, give
+a GENERAL description of the range of problems the program can cope
+with, and where it fails.
+
+ONTOLOGY (the domain of application)
+The kind of "ontology" described in TEACH * PROPOSALS may be usefully
+included in the report to indicate the full range of objects, properties
+relations, events, processes, etc. your program can represent.
+
+Make sure that the reader has a good idea of the range of entities your
+program can cope with (e.g. people, social groups, social interactions,
+social relations, or railway stations, routes between stations, times of
+routes, lengths of routes, costs of routes, etc.)
+
+BEHAVIOURAL SPECIFICATION (what the program does)
+A general behavioural specification can include a grammar for the
+language it can understand, formal specification of the class questions
+that can be answered or problems that can be solved, or plans that can
+be made, etc.
+
+If the program is an interactive one, explain what kinds of inputs it
+can accept (i.e. what the user has to type) and what kinds of outputs it
+generates. If the program makes use of graphics or graphical
+interactions, you should discuss with your supervisor the best way to
+describe this - e.g. using snapshots of the screen at various stages.
+
+If your program deals with a decision-making problem, then it may be
+useful to present a tree (taxonomy) or discrimination network showing
+the range of possible cases it can handle.
+
+Describing a program precisely in full generality can be difficult.
+(Research students may find it helpful to read TEACH *THESES).
+
+If necessary divide this section into two sub-sections, one giving
+an high level overview of what the program does and another giving
+more precise and general specifications (but not HOW it does it).
+If necessary put some of the more tedious detail in an appendix.
+
+-- 3. High level explanation of HOW it works --------------------------
+
+This section should sketch out, at a strategic level, HOW your program
+does whatever it does. Give the reader a FRAMEWORK within which to
+fit the details, but don't give details here.
+
+AVOID referring to details of the particular programming language used,
+or the particular names of procedures or variables.
+
+Include brief specifications of the following:
+
+(a) the main functional divisions of the program and their relationships
+(e.g. parser - semantic analyser - question answerer; or edge-finder -
+line finder - region finder - recognizer, etc.)
+
+(b) the kinds of representations used to correspond to the ontology (as
+described in TEACH * PROPOSALS), or to intermediate processing states
+during searching etc, (e.g. a database of assertions, a network of
+linked records, a 2-D array indicating spatial location, a set of
+rules in a production system, etc.)
+
+(c) the main techniques used (e.g. chart parser, best first search,
+constraint propagation). If there are any novel techniques you have
+developed draw attention here to their nature, but give details in
+a later section.
+
+Diagrams may help a lot, especially to explain your high level design
+strategy, e.g.
+
+    - by giving an overview of the program organisation (i.e. describe
+    the main components of the program, which ones invoke which others,
+    and how information and control flows between them)
+
+    - by giving a summary of the types of information used by the
+    program and how they are represented
+
+    - by showing state-transitions as the program works on a problem
+    (a flow chart).
+
+In this section describe how the program works in terms of the problem
+domain, not in terms of internal implementation details. For example
+in describing an image interpretation program you might say something
+like this:
+
+  "In order to find lines my program performs a horizontal raster scan
+  of the image until it finds a point where the intensity is changing
+  rapidly. It then assumes that point to be on a line, searches around
+  to find other such points, and then tries to group them into a line
+  fragment."
+
+Notice that this does not mention loops, arrays, procedure names,
+variables used, etc.
+
+In describing how information is represented you could say things like
+
+  "Images are represented as two dimensional arrays of intensity values,
+  whereas lines and junctions are represented by assertions in a database
+  giving location, type and connectivity."
+
+If the program consists of several major portions say so, and give a
+brief explanation of what each does and how they relate to each other,
+using a diagram to summarise how information flows, and what controls
+what.
+
+Don't assume familiarity with the programming language in your main
+description. However, in the comments in the code you can.
+
+
+-- 4. More detailed explanation of HOW it works -----------------------
+
+This section can assume that the reader has some knowledge of the
+programming language or a similar one. It can go into more detail in
+explaining the workings of your program and helping the reader follow
+the actual program given in the appendix. But don't simply go line by
+line through each procedure. Neither should you list every procedure
+saying what it does.
+
+Highlight the interesting problems and how you overcame them, or how any
+particularly complex techniques were implemented.
+
+For example,
+    "The procedure FINDLINES had to work out which points were parts
+    of collinear sequences of points. Doing this by searching out from
+    every point in all directions would have been very slow. Instead
+    each potential line in the four orientations was represented by a
+    list of points that might contribute to that line, and then for each
+    such list, the contributing points were grouped to form line
+    segments. To speed up accessing the possible lines were stored
+    in a 2-D array indexed by orientation of the line and distance from
+    the origin...."
+
+    "The DATABASE was used to store the intermediate results of the
+    search. By making -database- local to the procedure .... it was
+    possible to ensure that alterations to the database would not affect
+    the remaining procedures...."
+
+    "Information about an action was represented as a sixteen element
+    list containing ...."
+
+    "An early version of the program showed a tendency to get into
+    infinite loops. In order to prevent this the representation used
+    was changed to store information about nodes that had already been
+    visited and which arcs had been followed from those nodes..."
+
+Where appropriate include examples of printout showing how a procedure
+works, e.g. what input it takes and the output it produces. This is
+often much clearer than an abstract description. But DO NOT include
+masses of unreadable trace output. Refer to appendices where necessary.
+
+This section should describe major difficulties that you encountered and
+how you overcame them (apart from silly bugs), for example what happens
+to lines drawn at, say, 30 degrees to the X axis in the Turtle picture
+(they come out wobbly, making line-finding hard!)
+
+In both this and the previous section you will find yourself citing
+material contained in one or other of your appendices - give page
+numbers, not just appendix number, so please number the pages of each
+appendix for ease of reference.
+
+Don't translate your procedures line by line into English except where
+what each line does is very obscure - in which case it might be better
+to re-write the program! Aim to give the sort of explanation which might
+enable an experienced programmer to re-implement the program without
+seeing the original code.
+
+It may help to include an "information flow" or "dataflow" diagram in
+the form of a tree or network, showing which procedures call which
+others, and then show, on the links of the tree, what inputs go from
+caller to callee, and what outputs go from callee to caller. If a
+procedure gets information from a stored structure or puts information
+in a stored structure (e.g. the database or an array) you  can indicate
+this too, though make clear that your diagram does not confuse
+structures (e.g. the database, or a turtle picture) with procedures
+(e.g. add, present).
+
+
+
+-- 5. Conclusions ------------------------------------------------------
+
+In this section you compare the program described in Sections 3 and 4
+with the intentions outlined in Sections 1 and 2, assessing whether the
+program you have written meets your objectives, and discussing possible
+further developments.
+
+You may want to criticise your implementation and describe ways in which
+it could be improved if you had more time.
+
+You may also want to criticise the justification for your project given
+in Section 1, for example "I now think the pass oriented approach to
+vision systems doomed to failure - this change in opinion has been
+forced upon me by my difficulties in writing a self-contained line
+finder".
+
+Hopefully you will now have a clearer grasp both of what was involved in
+creating programs reported in the literature and of the difficulties
+their authors experienced in writing about them.
+
+You could assess particular techniques, or even the programming
+language you used: "Having seen the difficulties in implementing
+a chart parser in language X I now realise that it would have been
+more sensible to choose language Y because it has....."
+
+It has even been known for someone to re-implement a program described
+in a book or article and then conclude that the algorithms described
+could not have worked on the examples given.
+
+-- 6. Bibliography -----------------------------------------------------
+
+It is important to indicate that you have read relevant literature.
+Moreover, it is irritating to read something and recognise the views
+expounded as coming from some other (perhaps well known) paper when that
+paper is not cited in the bibliography. It can also lead to a charge of
+plagiarism, and an oral examination!
+
+So, when you have drawn ideas from your reading, clearly indicate in the
+write-up which bibliography entry is relevant. Similarly, if you have
+made significant use of a library program described in one of the teach
+files, you should cite the file in your bibliography.
+
+For format, see bibliographies in journals or books (e.g. M. Boden
+ARTIFICIAL INTELLIGENCE AND NATURAL MAN.) In bibliographies use capitals
+or underlining for names of books or journals, and quotation marks for
+titles of articles.
+
+If you use a verbatim quotation then give a page reference, in case the
+reader wishes to check the context. (All these comments apply as much to
+extended essays as to project reports.)
+
+
+-- Appendix 1: printout showing what the program does -----------------
+
+You will have shown in Section 2 of your write-up a hoped for session
+with your program (you may or may not have been able to obtain the
+desired performance). This Appendix should show a limited set of ACTUAL
+interactions with your program, commented where necessary.
+
+Include ONLY interesting examples that show the main capabilities and
+limitations of your program. I.e. try to indicate the program's SCOPE.
+Don't just blindly go through a whole range of examples that are
+essentially similar. The reader will get bored.
+
+
+-- Appendix 2: printout showing how it works --------------------------
+
+This Appendix should also show the program at work, but with additional
+print-out indicating HOW it works, provided that this can be done
+sensibly, i.e. without producing pages and pages of tedious trace
+printout.
+
+For this Appendix, you may TRACE important procedures in your
+program, but ONLY if this produces useful and legible information.
+
+Often the printout from traced procedures is helpful only to the
+programmer during debugging, but NOT to the reader wanting to know
+how the program works. For such readers it is generally better to
+include carefully chosen print instructions in the program itself,
+showing the changing datastructures (for example) in a clearly
+intelligible function.
+
+TRACE printing is often totally indigestible because it uses the
+standard printer that knows nothing about how to print out your
+structures in a useful way.
+
+Don't hand in pages and pages of trace printing! Remember, the goal is
+to COMMUNICATE, not overwhelm the reader, nor to waste precious trees.
+
+Nobody is going to wade through pages of traced procedure calls, so you
+might as well not waste the paper. When you do you use trace output
+write comments in the margin, high-lighting the interesting points -
+e.g. points where the program doesn't work as well as it should, or
+particularly difficult cases which the program handles well, or
+important transitions from one phase of processing to another.
+
+
+-- Appendix 3: listing of program -------------------------------------
+
+This should be a listing of your program. A report should NOT consist of
+comments to your program. A well commented program has a description of
+each main procedure, showing what its inputs and outputs are, what it
+does, in which context it is invoked, and perhaps an example call of the
+procedure with the result produced.
+
+If a procedure uses global variables, you should (in the comments)
+clearly explain the assumptions this procedure makes about the values of
+these global variables. If necessary, write comments in ink in the
+margin, drawing attention to main features of the program.
+
+NOTE: If your appendices consist of print-out not separated into pages,
+please try to cut the print-out so that it consists of relatively short
+pages. It is very irritating for a reader to have to struggle with long
+fan-folded sheets of print-out. Make sure all your pages are numbered and
+that your candidate number appears at the top right hand side of each
+page.
+
+
+-- Appendix 4: instructions to users ----------------------------------
+
+It is desirable that anyone in the school should be able to run your
+program. Learning how to organise and document a program in such a way
+that anyone can use it is an important part of your education! However,
+you may not have time to achieve this.
+
+If you manage to package your program in such a way that this is
+possible, please add an appendix explaining how any user can run it,
+without logging in as you. Get a friend to check that your instructions
+work.
+
+-- Avoid plagiarism: make clear what isn't your work ------------------
+
+If you have used sub-routines taken from the library, or written by
+other students or your tutor, please state clearly which they are and
+whether you used them unchanged or had to do some work yourself to
+extend them or remove bugs, etc. Using the work of others WITHOUT
+ACKNOWLEDGING it is plagiarism and can be penalised.
+
+If you have had a lot of help from tutor, demonstrators, other students,
+etc. it is good practice to include an "Acknowledgements" section in
+which you list them and thank them.
+
+
+-- Length of report ---------------------------------------------------
+
+If the report is part of a formal examination, make sure you find out
+from official documents what the length limit is. Asking a tutor or
+other students is NOT a reliable method, as they can all have memory
+lapses, or be unaware of recent changes.
+
+Remember that length limits are UPPER bounds. This means you don't
+have to fill up all that space. A short clear, punchy, write-up can be
+far more impressive than a long boring morass of detail.
+
+Program and appendices can take up additional space, but don't go
+overboard.
+
+Bear in mind that overworked examiners can get grumpy and this will
+affect their marking, whether they are aware of it or not.
+
+One common source of excessive length in reports is the inclusion of a
+"tutorial" on how the programming language works. Don't: you can assume
+that the reader understands the language, unless you use some very
+esoteric features or some syntactic extensions of your own.
+
+Another common fault is an excessively detailed survey of literature
+relevant to the project. A detailed survey is needed for an M.Phil or
+D.Phil thesis reporting a few years work, but not for a report on a
+project lasting a few weeks or months which supplements other
+examinations that test your general knowledge of the subject.
+
+
+-- Summary of main DON'Ts ---------------------------------------------
+
+DON'T include pages and pages of indigestible trace printing. This
+wastes trees and shows that you don't know how to communicate.
+
+DON'T use traced procedures to show what your program is doing, if
+special-purpose printout would make it clearer.
+
+DON'T assume that the reader of your main description is familiar
+with the programming language. Describe the problem and the program
+in a language independent manner, except where you have to go into
+programming details.
+
+DON'T describe your procedures line by line. Aim for a high-level
+strategic overview, and write the programs clearly and with comments,
+so that details can be seen by reading the code.
+
+DON'T put all the examples in the appendices. The main text should
+be readable as a self-contained, interesting and informative report.
+The appendices are there if the reader needs extra information.
+
+DON'T leave it to the reader to work out the SCOPE of your program.
+Include a clear indication of the range of problems it can deal with.
+(An example would be a grammar for the language it can handle.)
+
+DON'T include explanations of how the programming language works, except
+where that is relevant to a particular difficulty you had to overcome,
+or a particularly interesting technique you developed.
+
+DON'T assume the reader knows all about the domain that you are working
+on. E.g. if you write a program concerned with musical analysis, or
+solving electronics problems, or medical diagnosis, or a game that not
+everyone can play (e.g. bridge, or backgammon) then include enough
+explanation of the problem domain (possibly in an extra appendix) to
+ensure that the reader understands what you are trying to do.
+
+DON'T spend too long on surveying the literature in the first section:
+a project report is not an extended essay: say only enough to motivate
+your program and contrast it with others.
+
+DON'T be afraid to point out the weaknesses of your program and the
+things that need to be done to improve it.
+
+DON'T hand in lots of folded paper clipped together in such a way that
+it is hard to read.
+
+DON'T assume that the reader is familiar with your course notes or the
+teach files you have used: the external examiner certainly won't be. So
+don't say things like:
+    "I used the third technique listed in TEACH THINK"
+The reader will probably not know what you are talking about.
+
+DON'T hand in a report full of typos and spelling errors. (You can use
+the unix "spell" program to find the main errors, though it will be
+fooled by programming terminology and variable names.)
+
+DON'T ignore the advice in TEACH * PROGSTYLE
+
+
+-- Other relevant reading ---------------------------------------------
+
+TEACH * PROPOSALS
+    Before you start
+
+TEACH * PROJECTS
+    Previous titles of second year undergraduate AI projects
+
+TEACH * PGUIDE
+    General advice on planning and doing an AI project
+
+TEACH * PROGSTYLE
+    While designing a program
+
+TEACH * REPORTS
+    Some reminders of requirements for short reports
+
+TEACH * THESES
+    For research students.
+
+-- References for Sussman and Winograd (Good scenarios) ---------------
+
+G.J. Sussman
+    A Computer Model of Skill Acquisition.
+    New York: American Elsevier, 1975.
+
+T.S. Winograd,
+    Understanding Natural Language.
+    Edinburgh: Edinburgh Univ. Press, 1972.
+(Winograd's scenario is re-printed in many books, e.g. M.Boden's
+Artificial Intelligence and Natural Man.)
+
+--- $poplocal/local/teach/pstyle
+--- Copyright University of Sussex 1989. All rights reserved. ----------

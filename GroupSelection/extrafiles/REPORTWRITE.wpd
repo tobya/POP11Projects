@@ -1,0 +1,318 @@
+
+TEACH REPORTS                                      Aaron Sloman Dec 1989
+
+ON WRITING REPORTS ON PROGRAMS
+==============================
+
+This teach file gives suggestions for writing reports on term time
+programming assignments, especially in the first year.
+
+For advice on how to write up longer, more ambitious projects see
+    TEACH * PSTYLE
+
+This teach file assumes that you have already read the following teach
+files:
+  TEACH TEACH, VED, BUFFERS, MARK, LMR, VEDPOP, TRACE and
+  perhaps RESPOND or RIVER either of which introduces a simple
+  programming exercise.
+
+
+         CONTENTS - (Use <ENTER> g to access required sections)
+
+ -- Introduction
+ -- The format for reports
+ -- Style
+ -- Who are you writing for?
+ -- Describing WHAT a procedure does
+ -- Describing how it works
+ -- How to get printout into your report
+ -- On planning a project
+ -- Formatting a report
+
+-- Introduction -------------------------------------------------------
+
+Being able to write programs that work is important, but even more
+important is the ability to think and write clearly about
+    * what the program is for  (motivation)
+    * what exactly it does     (specification)
+    * how it works             (implementation)
+    * how it is to be used     (user guide)
+It is also important not to confuse these topics, though many do.
+
+It is therefore important to have practice at presenting reports on your
+programs, no matter how simple the programs are.
+
+One reason for writing a report and handing it to your tutor is that
+your attempts to explain things may help you and your tutor to discover
+points that you have not understood fully. That provides an opportunity
+to remedy the misunderstanding. It also provides an opportunity for your
+tutor to see if you need help improving your expository skills.
+
+
+-- The format for reports ---------------------------------------------
+
+A report on a program should normally include the following sections:
+
+1. MOTIVATION
+General description and motivation
+    A brief explanation of what the program does and why
+    anyone would want to write or to use such a program.
+    Even if this has been stated in a TEACH FILE or a handout from
+    a tutor you should state it in your own words. (The point is
+    to develop your own expository skills.)
+
+2. ILLUSTRATION
+   A few typical illustrations of the program working, with brief
+    explanations.
+
+    This could include TRACE printing, showing the activations of
+    your procedures (See TEACH TRACE) - but don't overdo trace output:
+    ask yourself "Would I find it informative to read that?"
+
+    It is sometimes also useful to trace system procedures like MATCHES,
+    READLINE, ADD and REMOVE. However, if you produce too much trace
+    printing, nobody will want to read it. The sample output should
+    simply be used to highlight interesting points about the progrm.
+    If necessary add special printing instructions to your program to
+    make it produce an informative record of what it is doing.
+
+    You can produce sample printout in your 'output' file by using LMR
+    as explained below, and then copy it into your report file using
+    <ENTER> ti (or mi) as explained in TEACH MARK.
+
+3. EXPLANATION
+    Explain precisely WHAT the program does, and HOW the program works.
+
+    Explaining what it does includes describing what sort of input it
+    takes, where it gets it from, what sort of output it produces,
+    where it puts it, and how the output is related to the input.
+
+    Explaining how it does it should indicate the main steps the program
+    goes through to achieve its results.
+
+    This should not necessarily describe every line of the program, but
+    should give an overview of what sorts of things are represented, how
+    they are represented, where input comes from, how it is transformed,
+    where output goes to, etc. The explanation should refer to a copy
+    of the program attached as appendix-1. (See below)
+
+    In particular make sure you describe what kinds of objects are
+    represented, and how you represent them (e.g. using lists, or
+    vectors, or numerical values for variables or whatever). Explain
+    what problems your program had to solve, and how it solved them
+    but do so in a manner that is independent of what programming
+    language you used or the particular procedure names or variable
+    names you used. Those are mere "implementation details".
+
+4. LIMITATIONS
+    A discussion of the limitations and possible future developments.
+    Don't be afraid to criticize your own program. If you have read
+    about similar programs, or related programs, it may be appropriate
+    to include some comparisons. For instance you could compare your
+    program with a program described in a help file.
+
+    If you have any ideas about the program could be extended, say
+    something about that.
+
+5. Conclusion
+    What lessons, if any have been learnt? What, if anything, has been
+    explained? Were your goals achieved? Is there anything you now think
+    you should have done differently? How does what you have done
+    compare with items in the literature?
+
+6. Bibliography: list books, articles and TEACH or HELP
+    files considered to be relevant. For the format of the bibliography
+    look at bibliographies in books or articles, or book lists provided
+    by your tutor.
+
+7. Appendix 1: The whole program, with comments explaining what the
+    procedures do, what the global variables (if any) are for, etc.
+    Don't use global variables to communicate information between
+    procedures: use arguments and results for that. If you do need
+    global variables, e.g. to represent some global state, make sure
+    you declare them at the TOP of your program, and include comments
+    saying what they are for, and what initial values they get.
+
+8. Appendix 2: More detailed examples of the program running, with
+    printout showing clearly what the program does, if your main
+    text does not already do this adequately. If the printout is
+    too indigestible edit in explanations of what is going on.
+
+REMINDER: the main points are
+    motivation, illustration, explanation, limitations.
+
+-- Style --------------------------------------------------------------
+
+Start by describing the problem in a manner that is independent of your
+program. ("My program looks after the bank accounts of property
+tycoons"). Describe the nature of the solution, using diagrams if
+necessary, again without describing details of the program or the
+language used.
+
+Try to give a brief global description of where input to the program
+comes from and how the output is produced, or how the program does what
+it is supposed to do.
+
+Try to avoid translating your program line by line from POP-11 into
+English. That will generally produce an incomprehensible explanation.
+
+Instead explain the overall STRATEGY used, if possible independently of
+whether the program is in POP-11 or any other language. E.g. in your
+main overview description of how the program works there is no need to
+mention particular variables and POP-11 procedures.
+
+Instead you might say something like:
+    The procedure takes a word and a list, and searches down the list
+    comparing the word with each element in turn, until it reaches an
+    element of the list which is the same as the word, in which case
+    it.... etc.
+
+Notice how that explanation could apply equally to a program in any
+language that can handle lists.
+
+Contrast that explanation of HOW the program works with a description
+of WHAT it does, such as:
+
+    It takes a word and a list, and returns true if the word is in
+    the list otherwise it returns false.
+
+
+-- Who are you writing for? -------------------------------------------
+
+Don't write as if you are communicating with your tutor who knows all
+about it anyway. Equally don't write as if for an idiotic novice.
+
+Try to write for an audience consisting of fellow students who may be a
+week or two behind you in their understanding. Assume your reader can be
+expected to understand about as much POP-11 as you do, so he does not
+need a tutorial on the basics.
+
+You can assume the reader knows about procedure definitions, has a rough
+idea about variables, matches, conditional instructions, etc. I.e. don't
+explain your program line by line, as if talking to a complete novice.
+If you give line by line explanations of all your procedures: the reader
+will then not be able to see the wood for the trees.
+
+Rather give a general account of what it does, and how. But try to make
+it sufficiently precise that a reader could re-invent the program from
+the description!
+
+The reader will not know what you were trying to achieve, nor what the
+global strategy for achieving it was, so describe that. In particular
+make sure you explain
+    a. which items of information are represented in your program,
+        (e.g. people, their ages, their addresses, points, lines, etc.)
+
+    b. how they are represented (e.g. using numbers, lists, lists of
+        lists, etc.)
+
+    c. how they are manipulated.
+
+It may help to include a diagram in the form of a tree or network,
+showing which procedures call which others, and then show, on the links
+of the diagram what inputs go from caller to callee, and what outputs go
+from callee to caller. If a procedure gets information from a stored
+structure or puts information in a stored structure you  can indicate
+this too, though make clear that your diagram does not confuse
+structures (e.g. the database, or a turtle picture) with procedures
+(e.g. add, present).
+
+
+-- Describing WHAT a procedure does -----------------------------------
+
+When describing what a procedure does, always start by stating what
+sorts of inputs the procedure takes, and what sorts of outputs it
+produces Give an explanation of the relation between input and output,
+and one or two simple examples to illustrate.
+
+E.g.
+    member(item, list) -> boolean
+
+     Two inputs:
+        1. an item (of any type)
+        2. a list (of items of any type)
+
+     One output:
+        A "boolean" (i.e. a truth value, true or false)
+
+     Definition:
+        The output is true if the item is in the list, and otherwise
+        it is false:
+
+     Examples:
+            member("cat",[ant badger cat dog elephant]) =>
+            ** <true>
+
+            member("cat",[ant badger cow dog elephant]) =>
+            ** <false>
+
+
+If there are no inputs, or no outputs, then say so. E.g.
+
+    start()
+      - this procedure takes no inputs or outputs. It ....
+
+If anything is printed out by the procedure say so, but don't confuse
+printing things out with producing results. (Results are left on the
+stack for another procedure to use, and need not be printed out, though
+they can be. See TEACH * STACK for details.)
+
+-- Describing how it works --------------------------------------------
+
+Explain the main steps, the intermediate structures created, and so on.
+
+Make sure you include examples of the whole system working, showing any
+results or any printout produced.
+
+If your illustrations include masses of TRACE printing, that will be
+indigestible for the reader. Edit out repetitive chunks (indicating that
+you are doing so) and edit in explanatory comments, or write them in ink
+after printing out the file.
+
+
+-- How to get printout into your report -------------------------------
+
+One way of doing this is explained in TEACH LMR (Load Marked Range).
+When you test the program and output is produced in your 'output' file
+you can mark the range and copy it into your report file.
+
+The ENTER R command in VED can be used to read other files into your report
+file. E.g.
+
+    <ENTER> r prog.p
+
+will read the contents of the file PROG.P into the file being edited, and
+insert them immediately after the current line.
+
+Alternatively you can use the command
+    <ENTER> ti
+
+to transcribe a "marked" part of one file into another. See TEACH MARK
+for details.
+
+Make sure that the trace printing in the illustration section and
+appendix 2 don't just go on and on repeating the same sort of thing.
+Edit out repetitive bits. Edit in comments. Mark the most interesting
+bits of the printout in ink to draw attention to them, and in the text
+explain what is going on.
+
+Above all, always think of the poor reader, who needs to be motivated,
+informed and entertained.
+
+
+-- On planning a project ----------------------------------------------
+
+If you are planning a project, the TEACH * PROPOSALS file may be useful
+in suggesting how to think about it before you start writing programs.
+
+
+-- Formatting a report ------------------------------------------------
+
+If you want to learn to use the Unix text formatter, which can arrange
+for your report to be neatly printed, e.g. with right margin
+straigtened, page numbers at the top or bottom of every page, portions
+underlined, portions centred, etc. you can get a short introduction
+from HELP * RNO.
+
+--- $poplocal/local/teach/reports
+--- Copyright University of Sussex 1991. All rights reserved. ----------
