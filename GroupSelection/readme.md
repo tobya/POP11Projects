@@ -10,9 +10,9 @@ The main code file is
 
 [GroupSelectionGA.pop11.TXT](GroupSelectionGA.pop11.TXT)
 
-You can write about the assignment and what the code is supposed to do in 
+You can read about the assignment and what the code is supposed to do in 
 
-[Group Selection write up.doc](Group Selection write up.doc)
+[Group_Selection_write_up.doc](Group Selection write up.doc)
 
 There are various other files that provide backup info and the odd run through of the program.  
 
