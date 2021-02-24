@@ -12,7 +12,9 @@ The main code file is
 
 You can read about the assignment and what the code is supposed to do in 
 
-[Group_Selection_write_up.doc](Group Selection write up.doc)
+[Group+Selection+write+up.doc](Group Selection write up.doc)
+
+There are various wpd file which are [https://en.wikipedia.org/wiki/WordPerfect](WordPerfect Files) (the one true word processor).  I'm not sure if Word still reads them, but they should be easily translated
 
 There are various other files that provide backup info and the odd run through of the program.  
 
